@@ -14,6 +14,7 @@ This document provides a comprehensive, step-by-step guide to using Git and GitH
 7. [GitHub Specific Operations](#github-specific-operations)
 8. [Advanced Topics](#advanced-topics)
 9. [Best Practices](#best-practices)
+10. [UV: Fast Python Package Manager](#uv-fast-python-package-manager)
 
 ## Installation
 
@@ -505,6 +506,187 @@ git worktree remove ../path-to-worktree
    git push origin v1.0.0
    ```
 4. Set up CI/CD to automate testing and deployment
+
+---
+
+# UV: Fast Python Package Manager
+
+*Added: May 4, 2025*
+
+UV is a blazingly fast Python package installer and resolver written in Rust. It offers 10-100x speed improvements over traditional package managers like pip.
+
+## Table of Contents
+1. [Installation](#uv-installation)
+2. [Project Management](#uv-project-management)
+3. [Dependency Management](#uv-dependency-management)
+4. [Tool Integration](#uv-tool-integration)
+5. [Migration from pip/virtualenv](#migrating-to-uv)
+
+<a name="uv-installation"></a>
+## Installation
+
+**macOS:**
+```bash
+# Using Homebrew (recommended)
+brew install uv
+
+# Or using curl
+curl -LsSf https://astral.sh/uv/install.sh | sudo sh
+```
+
+**Linux:**
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sudo sh
+```
+
+**Windows:**
+```bash
+# Using PowerShell (with admin privileges)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+Verify installation:
+```bash
+uv version
+```
+
+<a name="uv-project-management"></a>
+## Project Management
+
+### Initializing a Project
+```bash
+# Create a new project
+uv init project-name
+
+# Initialize in current directory
+uv init .
+```
+
+### Creating and Managing Virtual Environments
+```bash
+# Create a virtual environment
+uv venv
+
+# Activate the virtual environment
+# On Unix/macOS:
+source .venv/bin/activate
+# On Windows:
+.venv\Scripts\activate
+```
+
+### Running Python Scripts
+```bash
+# Run a Python script in the project's environment
+uv run script.py
+```
+
+<a name="uv-dependency-management"></a>
+## Dependency Management
+
+### Installing Packages
+```bash
+# Add a package to your project
+uv add requests
+
+# Add a specific version
+uv add requests==2.28.1
+
+# Add with constraints
+uv add 'requests<3.0.0'
+
+# Add with platform constraints
+uv add 'requests; sys_platform="linux"'
+```
+
+### Managing Dependencies
+```bash
+# Install dependencies from requirements.txt
+uv pip install -r requirements.txt
+
+# Install a package in development mode
+uv pip install -e .
+
+# Remove a package and its dependencies
+uv remove package-name
+```
+
+### Working with Dependency Groups
+```bash
+# Add a package to a specific group
+uv add --group dev pytest
+
+# Install only specific groups
+uv pip install --group dev
+```
+
+<a name="uv-tool-integration"></a>
+## Tool Integration
+
+### Using Python Development Tools
+```bash
+# Run a tool without installing it in your environment
+uv tool run black hello.py
+
+# Using the shorter syntax
+uvx black hello.py
+```
+
+### Managing Python Versions
+```bash
+# List installed Python versions
+uv python list
+```
+
+<a name="migrating-to-uv"></a>
+## Migrating from pip/virtualenv to UV
+
+### Converting Existing Projects
+```bash
+# Generate requirements.txt from current environment
+pip freeze > requirements.txt
+
+# Initialize UV project
+uv init .
+
+# Install from requirements
+uv pip install -r requirements.txt
+```
+
+### Command Equivalents
+
+| pip/virtualenv Command | UV Equivalent |
+|------------------------|---------------|
+| `python -m venv .venv` | `uv venv` |
+| `pip install package` | `uv add package` |
+| `pip install -r requirements.txt` | `uv pip install -r requirements.txt` |
+| `pip uninstall package` | `uv remove package` |
+
+## Quick Reference
+
+### Common UV Commands
+```
+# Project Management
+uv init <name>                               # Create a new project
+uv venv                                      # Create virtual environment
+
+# Package Management
+uv add <package>                             # Add a package
+uv add <package>==<version>                  # Add specific version
+uv remove <package>                          # Remove a package
+uv pip install -r requirements.txt           # Install from requirements
+
+# Tool Usage
+uvx <tool> [args]                            # Run a tool without installing
+uv tool run <tool> [args]                    # Same as above
+
+# Running Python
+uv run <script.py>                           # Run script in environment
+```
+
+---
+
+For more detailed information, refer to the official documentation:
+- [UV Documentation](https://github.com/astral-sh/uv)
 
 ---
 
